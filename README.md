@@ -1,6 +1,6 @@
 # ElmHub
 
-A redo of ElmHub app, based on Frontendmasters course on Elm.
+A redo of ElmHub app, based on Frontendmasters course on Elm. Before you try to run this app, please create your own Github token and put it on `src/Auth.elm`
 
 This project is bootstrapped with [Create Elm App](https://github.com/halfzebra/create-elm-app).
 
