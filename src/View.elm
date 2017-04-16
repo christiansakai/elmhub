@@ -48,19 +48,19 @@ searchOptions : M.SearchOptions -> Html U.Msg
 searchOptions options =
   div [ class "search-options" ]
     [ 
-      -- (optionsSearchIn options)
-      Html.map U.Options (optionsOwnedBy options)
-    -- , (optionsMinimumStars options)
+      Html.map U.Options (optionsSearchIn options)
+    , Html.map U.Options (optionsOwnedBy options)
+    , Html.map U.Options (optionsMinimumStars options)
     ]
 
 
-optionsSearchIn : M.SearchOptions -> Html U.Msg
+optionsSearchIn : M.SearchOptions -> Html U.OptionsMsg
 optionsSearchIn options = 
   div [ class "options" ] 
     [ label [ class "options__label" ] [ text "Search In" ]
     , select [ class "options__content"
              , value options.searchIn 
-             -- , onChange U.SetSearchIn
+             , onInput U.SetSearchIn
              ] 
         [ option [ value "name" ] [ text "Name" ] 
         , option [ value "description" ] [ text "Name and Description" ]
@@ -81,16 +81,23 @@ optionsOwnedBy options =
     ]
 
 
-optionsMinimumStars : M.SearchOptions -> Html U.Msg
+optionsMinimumStars : M.SearchOptions -> Html U.OptionsMsg
 optionsMinimumStars options =
-  div [ class "options"] 
-    [ label [ class "options__label" ] [ text "Minimum Stars" ]
-    , input [ class "options__content"
-            , type_ "text"
-            , value (toString options.minStars) 
-            -- , onInput SetMinStars
-            ] []
-    ]
+  let
+    inputClass =
+        case options.minStarsError of
+          Just _  -> "options__content options__content--error"
+          Nothing -> "options__content"
+
+  in
+    div [ class "options"] 
+      [ label [ class "options__label" ] [ text "Minimum Stars" ]
+      , input [ class inputClass
+              , type_ "text"
+              , value (toString options.minStars) 
+              , onInput U.SetMinStars
+              ] []
+      ]
 
 
 searchResults : M.Model -> Html U.Msg

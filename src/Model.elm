@@ -9,8 +9,10 @@ type alias Model =
   
 type alias SearchOptions =
     { minStars : Int
+    , minStarsError : Maybe String
     , searchIn : String
     , userFilter : String
+
     }
 
 
@@ -19,6 +21,7 @@ initialModel =
   { query = "elm"
   , options =
       { minStars = 0
+      , minStarsError = Nothing
       , searchIn = "name"
       , userFilter = ""
       }

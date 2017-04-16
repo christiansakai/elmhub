@@ -92,6 +92,10 @@ a:hover {
   min-width: 50%;
 }
 
+.options__content--error {
+  background-color: red;
+}
+
 .search-results {}
 
 .results__row {

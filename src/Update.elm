@@ -13,7 +13,7 @@ type Msg
 
 
 type OptionsMsg
-    = SetMinStars Int
+    = SetMinStars String
     | SetSearchIn String
     | SetUserFilter String
 
@@ -32,7 +32,13 @@ updateOptions : OptionsMsg -> M.SearchOptions -> M.SearchOptions
 updateOptions optionsMsg options =
   case optionsMsg of
     SetMinStars minStars -> 
-      { options | minStars = minStars }
+      case String.toInt minStars of
+        Ok minStars -> 
+          { options | minStars = minStars
+                    , minStarsError = Nothing }
+        
+        Err _ ->
+          { options | minStarsError = Just "Must be an integer!" }
 
     SetSearchIn searchIn ->
       { options | searchIn = searchIn }
