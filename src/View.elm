@@ -47,9 +47,10 @@ searchInput model =
 searchOptions : M.SearchOptions -> Html U.Msg
 searchOptions options =
   div [ class "search-options" ]
-    [ (optionsSearchIn options)
-    , (optionsOwnedBy options)
-    , (optionsMinimumStars options)
+    [ 
+      -- (optionsSearchIn options)
+      Html.map U.Options (optionsOwnedBy options)
+    -- , (optionsMinimumStars options)
     ]
 
 
@@ -59,7 +60,7 @@ optionsSearchIn options =
     [ label [ class "options__label" ] [ text "Search In" ]
     , select [ class "options__content"
              , value options.searchIn 
-             -- , onInput SetSearchIn
+             -- , onChange U.SetSearchIn
              ] 
         [ option [ value "name" ] [ text "Name" ] 
         , option [ value "description" ] [ text "Name and Description" ]
@@ -67,7 +68,7 @@ optionsSearchIn options =
     ]
 
 
-optionsOwnedBy : M.SearchOptions -> Html U.Msg
+optionsOwnedBy : M.SearchOptions -> Html U.OptionsMsg
 optionsOwnedBy options =
   div [ class "options" ] 
     [ label [ class "options__label" ] [ text "Owned By" ]
@@ -75,7 +76,7 @@ optionsOwnedBy options =
             , type_ "text"
             , placeholder "Enter a username"
             , value options.userFilter 
-            -- , onInput SetUserFilter
+            , onInput U.SetUserFilter
             ] []
     ]
 
