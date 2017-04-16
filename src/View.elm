@@ -13,7 +13,7 @@ view model =
     [ header 
     , searchBar model
     , searchResults model
-    , h1 [] [ text (toString model) ]
+    -- , h1 [] [ text (toString model) ]
     ]
 
 
@@ -102,19 +102,21 @@ optionsMinimumStars options =
 
 searchResults : M.Model -> Html U.Msg
 searchResults model =
-  yesResults
+  case model.results of
+    []  -> noResult
+    _   -> yesResults model.results
 
 
-yesResults : Html U.Msg
-yesResults =
+yesResults : List M.SearchResult -> Html U.Msg
+yesResults searchResults =
   section [ class "search-results" ]
     [ resultsHeader
-    , resultsBody
+    , resultsBody searchResults
     ]
 
 
-noResults : Html U.Msg
-noResults =
+noResult : Html U.Msg
+noResult =
   section [ class "no-results" ]
     [ h2 [] [ text "No results" ] ]
 
@@ -127,25 +129,18 @@ resultsHeader =
     ]
 
 
-resultsBody : Html U.Msg
-resultsBody =
-  div []
-    [ resultsRow
-    , resultsRow
-    , resultsRow
-    , resultsRow
-    , resultsRow
-    , resultsRow
-    ]
+resultsBody : List M.SearchResult -> Html U.Msg
+resultsBody searchResults =
+  div [] (List.map resultsRow searchResults)
   
 
-resultsRow : Html U.Msg
-resultsRow =
+resultsRow : M.SearchResult -> Html U.Msg
+resultsRow searchResult =
   div [ class "results__row" ]
-    [ span [ class "results__row__col0" ] [ text "300" ]
+    [ span [ class "results__row__col0" ] [ text (toString searchResult.stars) ]
     , div [ class "results__row__col1" ]
-        [ a [ href "#" ] [ text "#######" ]
-        , button [] [ text "X" ]
+        [ a [ href searchResult.href ] [ text searchResult.name ]
+        , button [ onClick (U.RemoveResult searchResult.id) ] [ text "X" ]
         ]
     ]
 

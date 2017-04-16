@@ -1,5 +1,6 @@
 module Update exposing ( Msg ( SetQuery
                              , Options
+                             , RemoveResult
                              )
                        , OptionsMsg (..)
                        , update )
@@ -10,6 +11,7 @@ import Model as M
 type Msg
     = SetQuery String
     | Options OptionsMsg
+    | RemoveResult Int
 
 
 type OptionsMsg
@@ -26,6 +28,9 @@ update msg model =
 
     Options optionsMsg ->
       { model | options = updateOptions optionsMsg model.options }
+
+    RemoveResult id ->
+      { model | results = List.filter (\result -> id /= result.id) model.results }
 
 
 updateOptions : OptionsMsg -> M.SearchOptions -> M.SearchOptions

@@ -1,9 +1,14 @@
-module Model exposing (Model, SearchOptions, initialModel)
+module Model exposing ( Model
+                      , SearchOptions
+                      , SearchResult
+                      , initialModel
+                      )
 
 
 type alias Model = 
   { query : String 
   , options : SearchOptions
+  , results : List SearchResult
   }
 
   
@@ -12,7 +17,14 @@ type alias SearchOptions =
     , minStarsError : Maybe String
     , searchIn : String
     , userFilter : String
+    }
 
+
+type alias SearchResult =
+    { id : Int
+    , name : String
+    , href : String
+    , stars : Int
     }
 
 
@@ -25,4 +37,21 @@ initialModel =
       , searchIn = "name"
       , userFilter = ""
       }
+  , results =
+      [ { id = 0
+        , name = "Elm"
+        , href = "#elm"
+        , stars = 1
+        }
+      , { id = 1
+        , name = "Elixir"
+        , href = "#elixir"
+        , stars = 2
+        }
+      , { id = 3
+        , name = "Learn"
+        , href = "#learn"
+        , stars = 3
+        }
+      ]
   }
