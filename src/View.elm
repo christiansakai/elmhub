@@ -139,8 +139,10 @@ resultsRow searchResult =
   div [ class "results__row" ]
     [ span [ class "results__row__col0" ] [ text (toString searchResult.stars) ]
     , div [ class "results__row__col1" ]
-        [ a [ href searchResult.href ] [ text searchResult.name ]
+        [ a [ href ("https://github.com/" ++ searchResult.name)
+            , target "_blank"
+            ]
+          [ text searchResult.name ]
         , button [ onClick (U.RemoveResult searchResult.id) ] [ text "X" ]
         ]
     ]
-

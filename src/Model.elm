@@ -23,7 +23,6 @@ type alias SearchOptions =
 type alias SearchResult =
     { id : Int
     , name : String
-    , href : String
     , stars : Int
     }
 
@@ -40,17 +39,14 @@ initialModel =
   , results =
       [ { id = 0
         , name = "Elm"
-        , href = "#elm"
         , stars = 1
         }
       , { id = 1
         , name = "Elixir"
-        , href = "#elixir"
         , stars = 2
         }
       , { id = 3
         , name = "Learn"
-        , href = "#learn"
         , stars = 3
         }
       ]

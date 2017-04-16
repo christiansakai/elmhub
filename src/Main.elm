@@ -2,32 +2,16 @@ module Main exposing (..)
 
 
 import Html exposing (Html)
-import Model exposing (Model, initialModel)
-import Update exposing (Msg, update)
-import View exposing (view)
+import Model as M
+import Update as U
+import View as V
 
 
 main =
-  Html.beginnerProgram
-    { view = view
-    , update = update
-    , model = initialModel
+  Html.program
+    { view = V.view
+    , update = U.update
+    , init = ( M.initialModel, Cmd.none )
+    , subscriptions = \_ -> Sub.none
     }
 
-
-
-
--- main : Program String Model Msg
--- main =
-    -- Html.programWithFlags
-    --     { view = view
-    --     , init = init
-    --     , update = update
-    --     , subscriptions = \_ -> Sub.none
-    --     }
-
----- MODEL ----
-
--- init : String -> ( Model, Cmd Msg )
--- init path =
---     ( initialModel path, Cmd.none )

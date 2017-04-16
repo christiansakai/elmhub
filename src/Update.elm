@@ -20,17 +20,17 @@ type OptionsMsg
     | SetUserFilter String
 
 
-update : Msg -> M.Model -> M.Model
+update : Msg -> M.Model -> ( M.Model, Cmd Msg )
 update msg model = 
   case msg of
     SetQuery query ->
-      { model | query = query }
+      ( { model | query = query }, Cmd.none )
 
     Options optionsMsg ->
-      { model | options = updateOptions optionsMsg model.options }
+      ( { model | options = updateOptions optionsMsg model.options }, Cmd.none )
 
     RemoveResult id ->
-      { model | results = List.filter (\result -> id /= result.id) model.results }
+      ( { model | results = List.filter (\result -> id /= result.id) model.results }, Cmd.none )
 
 
 updateOptions : OptionsMsg -> M.SearchOptions -> M.SearchOptions
