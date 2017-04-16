@@ -1,22 +1,23 @@
-module View exposing (..)
+module View exposing (view)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (..)
 
-import Model exposing (Model)
-import Update exposing (Msg)
+import Model as M
+import Update as U
 
-
-view : Model -> Html Msg
+view : M.Model -> Html U.Msg
 view model =
   div [ class "container" ]
     [ header 
     , searchBar model
     , searchResults model
+    , h1 [] [ text (toString model) ]
     ]
 
 
-header : Html Msg
+header : Html U.Msg
 header =
   section [ class "header" ]
     [ h1 [ class "header__title" ] [ text "ElmHub" ] 
@@ -24,68 +25,79 @@ header =
     ] 
 
 
-searchBar : Model -> Html Msg
+searchBar : M.Model -> Html U.Msg
 searchBar model =
   section [ class "search-bar" ]
-    [ searchInput
-    , searchOptions
+    [ searchInput model
+    , searchOptions model.options
     ]
 
 
-searchInput : Html Msg
-searchInput =
+searchInput : M.Model -> Html U.Msg
+searchInput model =
   div [ class "search-input" ]
-    [ input [ class "search-input__input", defaultValue "elm" ] [] 
-    , button [ class "search-input__button "] [ text "Search" ] 
+    [ input [ class "search-input__input"
+            , value model.query
+            , onInput U.SetQuery 
+            ] [] 
+    , button [ class "search-input__button" ] [ text "Search" ] 
     ]
 
 
-searchOptions : Html Msg
-searchOptions =
+searchOptions : M.SearchOptions -> Html U.Msg
+searchOptions options =
   div [ class "search-options" ]
-    [ optionsSearchIn
-    , optionsOwnedBy
-    , optionsMinimumStars
+    [ (optionsSearchIn options)
+    , (optionsOwnedBy options)
+    , (optionsMinimumStars options)
     ]
 
 
-optionsSearchIn : Html Msg
-optionsSearchIn = 
+optionsSearchIn : M.SearchOptions -> Html U.Msg
+optionsSearchIn options = 
   div [ class "options" ] 
     [ label [ class "options__label" ] [ text "Search In" ]
-    , select [ class "options__content" ] 
+    , select [ class "options__content"
+             , value options.searchIn 
+             -- , onInput SetSearchIn
+             ] 
         [ option [ value "name" ] [ text "Name" ] 
         , option [ value "description" ] [ text "Name and Description" ]
         ]
     ]
 
 
-optionsOwnedBy : Html Msg
-optionsOwnedBy =
+optionsOwnedBy : M.SearchOptions -> Html U.Msg
+optionsOwnedBy options =
   div [ class "options" ] 
     [ label [ class "options__label" ] [ text "Owned By" ]
     , input [ class "options__content"
             , type_ "text"
-            , placeholder "Enter a username" ] []
+            , placeholder "Enter a username"
+            , value options.userFilter 
+            -- , onInput SetUserFilter
+            ] []
     ]
 
 
-optionsMinimumStars : Html Msg
-optionsMinimumStars =
+optionsMinimumStars : M.SearchOptions -> Html U.Msg
+optionsMinimumStars options =
   div [ class "options"] 
     [ label [ class "options__label" ] [ text "Minimum Stars" ]
     , input [ class "options__content"
             , type_ "text"
-            , placeholder "0" ] []
+            , value (toString options.minStars) 
+            -- , onInput SetMinStars
+            ] []
     ]
 
 
-searchResults : Model -> Html Msg
+searchResults : M.Model -> Html U.Msg
 searchResults model =
   yesResults
 
 
-yesResults : Html Msg
+yesResults : Html U.Msg
 yesResults =
   section [ class "search-results" ]
     [ resultsHeader
@@ -93,13 +105,13 @@ yesResults =
     ]
 
 
-noResults : Html Msg
+noResults : Html U.Msg
 noResults =
   section [ class "no-results" ]
     [ h2 [] [ text "No results" ] ]
 
 
-resultsHeader : Html Msg
+resultsHeader : Html U.Msg
 resultsHeader =
   div [ class "results__row" ]
     [ h3 [ class "results__row__col0" ] [ text "Stars" ]
@@ -107,7 +119,7 @@ resultsHeader =
     ]
 
 
-resultsBody : Html Msg
+resultsBody : Html U.Msg
 resultsBody =
   div []
     [ resultsRow
@@ -119,7 +131,7 @@ resultsBody =
     ]
   
 
-resultsRow : Html Msg
+resultsRow : Html U.Msg
 resultsRow =
   div [ class "results__row" ]
     [ span [ class "results__row__col0" ] [ text "300" ]
@@ -128,54 +140,4 @@ resultsRow =
         , button [] [ text "X" ]
         ]
     ]
-
-
-
-
-
--- tableConfig : Table.Config SearchResult Msg
--- tableConfig =
---     Table.config
---         { toId = .id >> toString
---         , toMsg = SetTableState
---         , columns = [ starsColumn, nameColumn ]
-        -- }
-
-
--- viewStars : SearchResult -> Table.HtmlDetails Msg
--- viewStars result =
---     Table.HtmlDetails []
---         [ span [ class "star-count" ] [ text (toString result.stars) ] ]
-
-
--- viewSearchResult : SearchResult -> Table.HtmlDetails Msg
--- viewSearchResult result =
---     Table.HtmlDetails []
---         [ a [ href ("https://github.com/" ++ result.name), target "_blank" ]
---             [ text result.name ]
---         , button [ class "hide-result", onClick (DeleteById result.id) ]
---             [ text "X" ]
---         ]
-
-
-
--- starsColumn : Table.Column SearchResult Msg
--- starsColumn =
---     Table.veryCustomColumn
---         { name = "Stars"
---         , viewData = viewStars
---         , sorter = Table.increasingOrDecreasingBy (negate << .stars)
---         }
-
-
--- nameColumn : Table.Column SearchResult Msg
--- nameColumn =
---     Table.veryCustomColumn
---         { name = "Name"
---         , viewData = viewSearchResult
---         , sorter = Table.increasingOrDecreasingBy .name
---         }
-
-
----- PROGRAM ----
 

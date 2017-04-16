@@ -1,15 +1,41 @@
-module Update exposing (Msg, update)
+module Update exposing ( Msg ( SetQuery
+                             , Options
+                             )
+                       , OptionsMsg (..)
+                       , update )
 
-import Model exposing (Model)
+import Model as M
 
 
 type Msg
-    = NoOp
+    = SetQuery String
+    | Options OptionsMsg
 
-update : Msg -> Model -> Model
-update msg model = model
 
--- update : Msg -> Model -> ( Model, Cmd Msg )
--- update msg model =
---     ( model, Cmd.none )
+type OptionsMsg
+    = SetMinStars Int
+    | SetSearchIn String
+    | SetUserFilter String
 
+
+update : Msg -> M.Model -> M.Model
+update msg model = 
+  case msg of
+    SetQuery query ->
+      { model | query = query }
+
+    Options optionsMsg ->
+      { model | options = updateOptions optionsMsg model.options }
+
+
+updateOptions : OptionsMsg -> M.SearchOptions -> M.SearchOptions
+updateOptions optionsMsg options =
+  case optionsMsg of
+    SetMinStars minStars -> 
+      { options | minStars = minStars }
+
+    SetSearchIn searchIn ->
+      { options | searchIn = searchIn }
+
+    SetUserFilter userFilter ->
+      { options | userFilter = userFilter }

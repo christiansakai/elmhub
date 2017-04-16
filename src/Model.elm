@@ -1,27 +1,25 @@
-module Model exposing (Model, initialModel)
+module Model exposing (Model, SearchOptions, initialModel)
+
 
 type alias Model = 
-  { message : String
-  , logo : String
+  { query : String 
+  , options : SearchOptions
   }
+
+  
+type alias SearchOptions =
+    { minStars : Int
+    , searchIn : String
+    , userFilter : String
+    }
+
 
 initialModel : Model
 initialModel =
-  { message = "ElmHub"
-  , logo = "Logo"
+  { query = "elm"
+  , options =
+      { minStars = 0
+      , searchIn = "name"
+      , userFilter = ""
+      }
   }
-
--- type alias Model =
---     { message : String
---     , logo : String
---     -- , tableState : Table.State
---     }
-
--- initialModel : String -> Model
--- initialModel path = 
---   { message = "Your Elm App is working!"
---   , logo = path
---   -- , tableState  = Table.initialSort "Stars"
---   }
-
-
