@@ -94,6 +94,12 @@ a:hover {
   background-color: red;
 }
 
+.error-results {
+  padding: 10px;
+  text-align: center;
+  color: red;
+}
+
 .no-results {
   padding: 10px;
   text-align: center;

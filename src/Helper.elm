@@ -1,58 +1,23 @@
-port module Helper exposing ( Model
-                       , SearchOptions
-                       , SearchResult
-                       , initialModel
-                       )
+port module Helper exposing ( getQueryString
+                            , githubSearch
+                            , githubResponse
+                            , decodeResponse
+                            )
 
 import Json.Decode as D
 import Json.Decode.Pipeline as P
 import Auth as A
 import Model as M
-import Update as U
-
-
--- responseDecoder : D.Decoder (List SearchResult)
--- responseDecoder =
---     Json.Decode.at [ "items" ] (Json.Decode.list searchResultDecoder)
-
-
--- searchResultDecoder : Decoder SearchResult
--- searchResultDecoder =
---     decode SearchResult
---         |> required "id" Json.Decode.int
---         |> required "full_name" Json.Decode.string
---         |> required "stargazers_count" Json.Decode.int
-
-
--- decodeGithubResponse : Json.Decode.Value -> Msg
--- decodeGithubResponse value =
---     case Json.Decode.decodeValue responseDecoder value of
---         Ok results ->
---             HandleSearchResponse results
-
---         Err err ->
---             HandleSearchError (Just err)
-
-
--- decodeResponse : Json.Decode.Value -> Msg
--- decodeResponse json =
---     case Json.Decode.decodeValue responseDecoder json of
---         Err err ->
---             HandleSearchError (Just err)
-
---         Ok results ->
---             HandleSearchResponse results
+import Message as Ms
 
 
 port githubSearch : String -> Cmd msg
 
 
-port githubResponse : (D.Value -> msg) -> Sub msg
-
-
 getQueryString : M.Model -> String
 getQueryString model =
-    -- See https://developer.github.com/v3/search/#example for how to customize!
+    -- See https://developer.github.com/v3/search/#example 
+    -- for how to customize!
     "access_token="
         ++ A.token
         ++ "&q="
@@ -63,7 +28,33 @@ getQueryString model =
         ++ (toString model.options.minStars)
         ++ "+language:elm"
         ++ (if String.isEmpty model.options.userFilter then
-                ""
+              ""
             else
-                "+user:" ++ model.options.userFilter
+              "+user:" ++ model.options.userFilter
            )
+
+
+port githubResponse : (D.Value -> msg) -> Sub msg
+
+
+decodeResponse : D.Value -> Ms.Msg
+decodeResponse json =
+  case D.decodeValue responseDecoder json of
+    Ok results ->
+      Ms.HandleSearchResponse results
+
+    Err err ->
+      Ms.HandleSearchError (Just err)
+
+
+responseDecoder : D.Decoder (List M.SearchResult)
+responseDecoder =
+  D.at [ "items" ] (D.list searchResultDecoder)
+
+
+searchResultDecoder : D.Decoder M.SearchResult
+searchResultDecoder =
+  P.decode M.SearchResult
+    |> P.required "id" D.int
+    |> P.required "full_name" D.string
+    |> P.required "stargazers_count" D.int

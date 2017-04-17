@@ -1,7 +1,18 @@
-require('../node_modules/normalize.css/normalize.css');
-require('./main.css');
-var Elm = require('./Main.elm');
+require('../node_modules/normalize.css/normalize.css')
+require('./main.css')
 
-var root = document.getElementById('root');
+const Github  = require('./github')
+const Elm     = require('./Main.elm')
 
-Elm.Main.embed(root);
+const root = document.getElementById('root')
+const github = new Github()
+
+const app = Elm.Main.embed(root)
+
+// from Helper.elm githubSearch
+app.ports.githubSearch.subscribe((query) => {
+  github.getSearch(query).repositories({}, (err, repositories) => {
+    // to Helper.elm githubResponse
+    app.ports.githubResponse.send(repositories)
+  })
+})

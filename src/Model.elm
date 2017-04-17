@@ -9,6 +9,7 @@ type alias Model =
   { query : String 
   , options : SearchOptions
   , results : List SearchResult
+  , errorMessage : Maybe String
   }
 
   
@@ -36,18 +37,6 @@ initialModel =
       , searchIn = "name"
       , userFilter = ""
       }
-  , results =
-      [ { id = 0
-        , name = "Elm"
-        , stars = 1
-        }
-      , { id = 1
-        , name = "Elixir"
-        , stars = 2
-        }
-      , { id = 3
-        , name = "Learn"
-        , stars = 3
-        }
-      ]
+  , results = []
+  , errorMessage = Nothing
   }
