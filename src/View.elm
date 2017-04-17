@@ -4,6 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
+import Json.Decode as D
 import Model as M
 import Message as Ms
 
@@ -13,7 +14,6 @@ view model =
     [ header 
     , searchBar model
     , searchResults model
-    -- , h1 [] [ text (toString model) ]
     ]
 
 
@@ -97,9 +97,14 @@ optionsMinimumStars options =
       , input [ class inputClass
               , type_ "text"
               , value (toString options.minStars) 
-              , onInput Ms.SetMinStars
+              , onBlurWithTargetValue Ms.SetMinStars
               ] []
       ]
+
+
+onBlurWithTargetValue : (String -> Ms.OptionsMsg) -> Attribute Ms.OptionsMsg
+onBlurWithTargetValue toMsg =
+    on "blur" (D.map toMsg targetValue)
 
 
 searchResults : M.Model -> Html Ms.Msg
